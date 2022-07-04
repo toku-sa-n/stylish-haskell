@@ -121,9 +121,9 @@ case05 :: Assertion
 case05 =
   withTestDirTree $ do
     createDirectory aDir >> writeFile c fileCont
-    mapM_ (flip writeFile fileCont) fs
+    mapM_ (`writeFile` fileCont) fs
     result <- findHaskellFiles False input
-    sort result @?= (sort $ map normalise expected)
+    sort result @?= sort (map normalise expected)
   where
     input = c : fs
     fs = ["b.hs", "a.hs"]
@@ -137,7 +137,7 @@ case05 =
 case06 :: Assertion
 case06 =
   withTestDirTree $ do
-    mapM_ (flip writeFile "") input
+    mapM_ (`writeFile` "") input
     result <- findHaskellFiles False input
     result @?= expected
   where
@@ -149,7 +149,7 @@ case06 =
 case07 :: Assertion
 case07 =
   withTestDirTree $ do
-    mapM_ (flip writeFile "") input
+    mapM_ (`writeFile` "") input
     result <- findHaskellFiles False input
     result @?= expected
   where
