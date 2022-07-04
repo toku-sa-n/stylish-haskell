@@ -2,7 +2,6 @@
 {-# LANGUAGE DataKinds        #-}
 {-# LANGUAGE DoAndIfThenElse  #-}
 {-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE LambdaCase       #-}
 {-# LANGUAGE MultiWayIf       #-}
 {-# LANGUAGE NamedFieldPuns   #-}
 {-# LANGUAGE RecordWildCards  #-}
@@ -144,8 +143,7 @@ putDataDecl cfg@Config {..} decl = do
           (dataComments decl)
       onelineEnum =
         isEnum decl &&
-        not cBreakEnums &&
-        all (not . commentGroupHasComments) constructorComments
+        not cBreakEnums && not (any commentGroupHasComments constructorComments)
   putText $ newOrData decl
   space
   putName decl
