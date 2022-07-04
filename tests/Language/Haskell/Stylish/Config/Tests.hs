@@ -48,14 +48,13 @@ tests =
 createFilesAndGetConfig :: [(FilePath, String)] -> IO Config
 createFilesAndGetConfig files =
   withTestDirTree $ do
-    mapM_ (\(k, v) -> writeFile k v) files
+    mapM_ (uncurry writeFile) files
   -- create an empty directory and change into it
     createDirectory "src"
     setCurrentDirectory "src"
   -- from that directory read the config file and extract extensions
   -- to make sure the search for .cabal file works
-    config <- loadConfig (const (pure ())) Nothing
-    pure config
+    loadConfig (const (pure ())) Nothing
 
 --------------------------------------------------------------------------------
 testExtensionsFromDotCabal :: Assertion
@@ -166,67 +165,67 @@ dotCabal includeExtensions =
 -- | Example .stylish-haskell.yaml
 dotStylish :: String
 dotStylish =
-  unlines $
-  [ "steps:"
-  , "  - imports:"
-  , "      align: none"
-  , "      list_align: after_alias"
-  , "      long_list_align: inline"
-  , "      separate_lists: true"
-  , "  - language_pragmas:"
-  , "      style: vertical"
-  , "      align: false"
-  , "      remove_redundant: true"
-  , "  - trailing_whitespace: {}"
-  , "  - records:"
-  , "      equals: \"same_line\""
-  , "      first_field: \"indent 2\""
-  , "      field_comment: 2"
-  , "      deriving: 4"
-  , "      via: \"indent 2\""
-  , "columns: 110"
-  , "language_extensions:"
-  , "  - TemplateHaskell"
-  , "  - QuasiQuotes"
-  ]
+  unlines
+    [ "steps:"
+    , "  - imports:"
+    , "      align: none"
+    , "      list_align: after_alias"
+    , "      long_list_align: inline"
+    , "      separate_lists: true"
+    , "  - language_pragmas:"
+    , "      style: vertical"
+    , "      align: false"
+    , "      remove_redundant: true"
+    , "  - trailing_whitespace: {}"
+    , "  - records:"
+    , "      equals: \"same_line\""
+    , "      first_field: \"indent 2\""
+    , "      field_comment: 2"
+    , "      deriving: 4"
+    , "      via: \"indent 2\""
+    , "columns: 110"
+    , "language_extensions:"
+    , "  - TemplateHaskell"
+    , "  - QuasiQuotes"
+    ]
 
 -- | Example .stylish-haskell.yaml
 dotStylish2 :: String
 dotStylish2 =
-  unlines $
-  [ "steps:"
-  , "  - imports:"
-  , "      align: none"
-  , "      list_align: after_alias"
-  , "      long_list_align: inline"
-  , "      separate_lists: true"
-  , "  - language_pragmas:"
-  , "      style: vertical"
-  , "      align: false"
-  , "      remove_redundant: true"
-  , "  - trailing_whitespace: {}"
-  , "language_extensions:"
-  , "  - TemplateHaskell"
-  , "  - QuasiQuotes"
-  ]
+  unlines
+    [ "steps:"
+    , "  - imports:"
+    , "      align: none"
+    , "      list_align: after_alias"
+    , "      long_list_align: inline"
+    , "      separate_lists: true"
+    , "  - language_pragmas:"
+    , "      style: vertical"
+    , "      align: false"
+    , "      remove_redundant: true"
+    , "  - trailing_whitespace: {}"
+    , "language_extensions:"
+    , "  - TemplateHaskell"
+    , "  - QuasiQuotes"
+    ]
 
 -- | Example .stylish-haskell.yaml
 dotStylish3 :: String
 dotStylish3 =
-  unlines $
-  [ "steps:"
-  , "  - imports:"
-  , "      align: none"
-  , "      list_align: after_alias"
-  , "      long_list_align: inline"
-  , "      separate_lists: true"
-  , "  - language_pragmas:"
-  , "      style: vertical"
-  , "      align: false"
-  , "      remove_redundant: true"
-  , "  - trailing_whitespace: {}"
-  , "columns: null"
-  , "language_extensions:"
-  , "  - TemplateHaskell"
-  , "  - QuasiQuotes"
-  ]
+  unlines
+    [ "steps:"
+    , "  - imports:"
+    , "      align: none"
+    , "      list_align: after_alias"
+    , "      long_list_align: inline"
+    , "      separate_lists: true"
+    , "  - language_pragmas:"
+    , "      style: vertical"
+    , "      align: false"
+    , "      remove_redundant: true"
+    , "  - trailing_whitespace: {}"
+    , "columns: null"
+    , "language_extensions:"
+    , "  - TemplateHaskell"
+    , "  - QuasiQuotes"
+    ]
