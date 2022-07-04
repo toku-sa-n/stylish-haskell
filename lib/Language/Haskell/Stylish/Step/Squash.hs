@@ -79,7 +79,7 @@ matchSeparator _ = Nothing
 --------------------------------------------------------------------------------
 step :: Step
 step =
-  makeStep "Squash" $ \ls (module') ->
+  makeStep "Squash" $ \ls module' ->
     let changes =
           foldMap squashFieldDecl (everything module') <>
           foldMap squashMatch (everything module')
