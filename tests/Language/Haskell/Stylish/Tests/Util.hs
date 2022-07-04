@@ -1,13 +1,13 @@
 {-# LANGUAGE BlockArguments #-}
 {-# LANGUAGE TypeFamilies   #-}
-module Language.Haskell.Stylish.Tests.Util
-    ( dumpAst
-    , dumpModule
-    , Snippet (..)
-    , assertSnippet
-    , withTestDirTree
-    ) where
 
+module Language.Haskell.Stylish.Tests.Util
+  ( dumpAst
+  , dumpModule
+  , Snippet(..)
+  , assertSnippet
+  , withTestDirTree
+  ) where
 
 --------------------------------------------------------------------------------
 import           Control.Exception               (bracket, try)
@@ -41,54 +41,56 @@ import           Language.Haskell.Stylish.Step
 -- Haskell code will be represented by ghc-parser's AST
 dumpAst :: Data a => (Module -> a) -> String -> String
 dumpAst extract str =
-  let Right(theModule) = parseModule [] Nothing str
-      ast              = extract theModule
-      sdoc             = showAstData BlankSrcSpan BlankEpAnnotations ast
-  in  showOutputable sdoc
+  let Right (theModule) = parseModule [] Nothing str
+      ast = extract theModule
+      sdoc = showAstData BlankSrcSpan BlankEpAnnotations ast
+   in showOutputable sdoc
 
 dumpModule :: String -> String
 dumpModule = dumpAst id
 
 --------------------------------------------------------------------------------
 testStep :: Step -> String -> String
-testStep s str = case s of
-  Step _ step ->
-    case parseModule [] Nothing str of
-      Left err      -> error err
-      Right module' -> unlines $ step ls module'
+testStep s str =
+  case s of
+    Step _ step ->
+      case parseModule [] Nothing str of
+        Left err      -> error err
+        Right module' -> unlines $ step ls module'
   where
     ls = lines str
 
-
 --------------------------------------------------------------------------------
 -- | 'Lines' that show as a normal string.
-newtype Snippet = Snippet {unSnippet :: Lines} deriving (Eq)
+newtype Snippet =
+  Snippet
+    { unSnippet :: Lines
+    }
+  deriving (Eq)
 
 -- Prefix with one newline since so HUnit will use a newline after `got: ` or
 -- `expected: `.
-instance Show Snippet where show = unlines . ("" :) . unSnippet
+instance Show Snippet where
+  show = unlines . ("" :) . unSnippet
 
 instance IsList Snippet where
-    type Item Snippet = String
-    fromList = Snippet
-    toList   = unSnippet
-
+  type Item Snippet = String
+  fromList = Snippet
+  toList = unSnippet
 
 --------------------------------------------------------------------------------
 testSnippet :: Step -> Snippet -> Snippet
 testSnippet s = Snippet . lines . testStep s . unlines . unSnippet
 
-
 --------------------------------------------------------------------------------
 assertSnippet :: Step -> Snippet -> Snippet -> Assertion
 assertSnippet step input expected = expected @=? testSnippet step input
-
 
 --------------------------------------------------------------------------------
 -- | Create a temporary directory with a randomised name built from the template
 -- provided
 createTempDirectory :: String -> IO FilePath
-createTempDirectory template  = do
+createTempDirectory template = do
   tmpRootDir <- getTemporaryDirectory
   dirId <- randomIO :: IO Word
   findTempName tmpRootDir dirId
@@ -99,17 +101,17 @@ createTempDirectory template  = do
       r <- try $ createDirectory dirpath
       case r of
         Right _ -> return dirpath
-        Left  e | isAlreadyExistsError e -> findTempName tmpRootDir (x+1)
-                | otherwise              -> ioError e
-
+        Left e
+          | isAlreadyExistsError e -> findTempName tmpRootDir (x + 1)
+          | otherwise -> ioError e
 
 --------------------------------------------------------------------------------
 -- | Perform an action inside a temporary directory tree and purge the tree
 -- afterwards
 withTestDirTree :: IO a -> IO a
-withTestDirTree action = bracket
+withTestDirTree action =
+  bracket
     ((,) <$> getCurrentDirectory <*> createTempDirectory "stylish_haskell")
     (\(current, temp) ->
-        setCurrentDirectory current *>
-        removeDirectoryRecursive temp)
+       setCurrentDirectory current *> removeDirectoryRecursive temp)
     (\(_, temp) -> setCurrentDirectory temp *> action)
