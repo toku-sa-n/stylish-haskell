@@ -1,6 +1,5 @@
 --------------------------------------------------------------------------------
-{-# LANGUAGE RecordWildCards #-}
-{-# LANGUAGE TypeFamilies    #-}
+{-# LANGUAGE TypeFamilies #-}
 
 module Language.Haskell.Stylish.Step.SimpleAlign
   ( Config(..)
@@ -68,7 +67,7 @@ records :: GHC.Located Hs.HsModule -> [Record]
 records modu = do
   let decls = map GHC.unLoc (Hs.hsmodDecls (GHC.unLoc modu))
       tyClDecls = [tyClDecl | Hs.TyClD _ tyClDecl <- decls]
-      dataDecls = [d | d@(Hs.DataDecl _ _ _ _ _) <- tyClDecls]
+      dataDecls = [d | d@(Hs.DataDecl {}) <- tyClDecls]
       dataDefns = map Hs.tcdDataDefn dataDecls
   d@Hs.ConDeclH98 {} <- concatMap getConDecls dataDefns
   case Hs.con_args d of
@@ -149,7 +148,7 @@ matchToAlignable (GHC.L matchLoc (Hs.Match _ (Hs.FunRhs name _ _) pats@(_:_) grh
       , aRight = bodyPos
       , aRightLead = length "= "
       }
-matchToAlignable (GHC.L _ (Hs.Match _ _ _ _)) = Nothing
+matchToAlignable (GHC.L _ (Hs.Match {})) = Nothing
 
 --------------------------------------------------------------------------------
 multiWayIfToAlignable ::
@@ -166,7 +165,7 @@ grhsToAlignable ::
   -> Maybe (Alignable GHC.RealSrcSpan)
 grhsToAlignable (GHC.L grhsloc (Hs.GRHS _ guards@(_:_) body)) = do
   let guardsLocs = map GHC.getLocA guards
-      bodyLoc = GHC.getLocA $ body
+      bodyLoc = GHC.getLocA body
       left = foldl1' GHC.combineSrcSpans guardsLocs
   matchPos <- GHC.srcSpanToRealSrcSpan grhsloc
   leftPos <- GHC.srcSpanToRealSrcSpan left
