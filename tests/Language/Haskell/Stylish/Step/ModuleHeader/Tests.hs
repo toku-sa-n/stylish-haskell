@@ -866,7 +866,7 @@ ex32 =
 ex33 :: Assertion
 ex33 =
   assertSnippet
-    (step Nothing $ defaultConfig)
+    (step Nothing defaultConfig)
     [ "module Foo ("
     , "  -- Bar"
     , "  bar, -- Inline bar"
