@@ -1,5 +1,4 @@
 {-# LANGUAGE BlockArguments             #-}
-{-# LANGUAGE DeriveGeneric              #-}
 {-# LANGUAGE DerivingStrategies         #-}
 {-# LANGUAGE DoAndIfThenElse            #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
@@ -79,9 +78,9 @@ newtype Printer a =
            )
 
 -- | Configuration for printer, currently empty
-data PrinterConfig =
+newtype PrinterConfig =
   PrinterConfig
-    { columns :: !(Maybe Int)
+    { columns :: Maybe Int
     }
 
 -- | State of printer
@@ -97,11 +96,7 @@ runPrinter :: PrinterConfig -> Printer a -> (a, Lines)
 runPrinter cfg (Printer printer) =
   let (a, PrinterState parsedLines _ startedLine) =
         runReaderT printer cfg `runState` PrinterState [] 0 ""
-   in ( a
-      , parsedLines <>
-        if startedLine == []
-          then []
-          else [startedLine])
+   in (a, parsedLines <> [startedLine | startedLine /= []])
 
 -- | Run printer to get printed lines only
 runPrinter_ :: PrinterConfig -> Printer a -> Lines
@@ -245,15 +240,15 @@ putType ltp =
       putText ")"
     GHC.HsForAllTy {} -> putOutputable ltp
     GHC.HsQualTy {} -> putOutputable ltp
-    GHC.HsAppKindTy _ _ _ -> putOutputable ltp
+    GHC.HsAppKindTy {} -> putOutputable ltp
     GHC.HsListTy _ _ -> putOutputable ltp
     GHC.HsSumTy _ _ -> putOutputable ltp
-    GHC.HsIParamTy _ _ _ -> putOutputable ltp
-    GHC.HsKindSig _ _ _ -> putOutputable ltp
+    GHC.HsIParamTy {} -> putOutputable ltp
+    GHC.HsKindSig {} -> putOutputable ltp
     GHC.HsStarTy _ _ -> putOutputable ltp
     GHC.HsSpliceTy _ _ -> putOutputable ltp
-    GHC.HsDocTy _ _ _ -> putOutputable ltp
-    GHC.HsBangTy _ _ _ -> putOutputable ltp
+    GHC.HsDocTy {} -> putOutputable ltp
+    GHC.HsBangTy {} -> putOutputable ltp
     GHC.HsRecTy _ _ -> putOutputable ltp
     GHC.HsWildCardTy _ -> putOutputable ltp
     GHC.XHsType _ -> putOutputable ltp
@@ -287,7 +282,7 @@ parenthesize action = putText "(" *> action <* putText ")"
 -- | Add separator between each element of the given printers
 sep :: P a -> [P a] -> P ()
 sep _ []           = pure ()
-sep s (first:rest) = first >> forM_ rest ((>>) s)
+sep s (first:rest) = first >> forM_ rest (s >>)
 
 -- | Suffix a printer with another one
 suffix :: P a -> P b -> P a
