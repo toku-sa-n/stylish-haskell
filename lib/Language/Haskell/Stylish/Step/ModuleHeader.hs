@@ -159,7 +159,7 @@ printHeader conf mbName mbExps _ mbModuleComment mbWhereComment = do
         Single
           | [egroup] <- exports
           , not (commentGroupHasComments egroup)
-          , [(export, _)] <- (cgItems egroup) -> do
+          , [(export, _)] <- cgItems egroup -> do
             printSingleLineExportList conf [export]
             attachModuleComment
         Inline
@@ -168,7 +168,7 @@ printHeader conf mbName mbExps _ mbModuleComment mbWhereComment = do
             attachModuleComment
         Inline
           | [egroup] <- exports
-          , not (commentGroupHasComments egroup) -> do
+          , not (commentGroupHasComments egroup) ->
             wrapping
               (printSingleLineExportList conf $ map fst $ cgItems egroup)
               (do attachOpenBracket
