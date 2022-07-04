@@ -22,7 +22,6 @@ module Language.Haskell.Stylish.Printer
   , getCurrentLineLength
   , newline
   , parenthesize
-  , prefix
   , putComment
   , putMaybeLineComment
   , putOutputable
@@ -289,10 +288,6 @@ parenthesize action = putText "(" *> action <* putText ")"
 sep :: P a -> [P a] -> P ()
 sep _ []           = pure ()
 sep s (first:rest) = first >> forM_ rest ((>>) s)
-
--- | Prefix a printer with another one
-prefix :: P a -> P b -> P b
-prefix pa pb = pa >> pb
 
 -- | Suffix a printer with another one
 suffix :: P a -> P b -> P a
