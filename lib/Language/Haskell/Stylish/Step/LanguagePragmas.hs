@@ -176,8 +176,7 @@ isRedundantViewPatterns = null . queryModule getViewPat
 -- | Check if the BangPatterns language pragma is redundant.
 isRedundantBangPatterns :: Module -> Bool
 isRedundantBangPatterns modul =
-  (null $ queryModule getBangPat modul) &&
-  (null $ queryModule getMatchStrict modul)
+  null (queryModule getBangPat modul) && null (queryModule getMatchStrict modul)
   where
     getBangPat :: GHC.Pat GHC.GhcPs -> [()]
     getBangPat =
