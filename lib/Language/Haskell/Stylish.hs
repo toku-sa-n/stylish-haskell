@@ -4,13 +4,6 @@
 module Language.Haskell.Stylish
       -- * Run
   ( runSteps
-      -- * Steps
-  , simpleAlign
-  , imports
-  , languagePragmas
-  , tabs
-  , trailingWhitespace
-  , unicodeSyntax
       -- ** Helpers
   , findHaskellFiles
   , stepName
@@ -45,47 +38,6 @@ import qualified Language.Haskell.Stylish.Step.TrailingWhitespace as TrailingWhi
 import qualified Language.Haskell.Stylish.Step.UnicodeSyntax      as UnicodeSyntax
 import           Language.Haskell.Stylish.Verbose
 import           Paths_stylish_haskell                            (version)
-
---------------------------------------------------------------------------------
-simpleAlign ::
-     Maybe Int -- ^ Columns
-  -> SimpleAlign.Config
-  -> Step
-simpleAlign = SimpleAlign.step
-
---------------------------------------------------------------------------------
-imports ::
-     Maybe Int -- ^ columns
-  -> Imports.Options
-  -> Step
-imports = Imports.step
-
---------------------------------------------------------------------------------
-languagePragmas ::
-     Maybe Int -- ^ columns
-  -> LanguagePragmas.Style
-  -> Bool -- ^ Pad to same length in vertical mode?
-  -> Bool -- ^ remove redundant?
-  -> String -- ^ language prefix
-  -> Step
-languagePragmas = LanguagePragmas.step
-
---------------------------------------------------------------------------------
-tabs ::
-     Int -- ^ number of spaces
-  -> Step
-tabs = Tabs.step
-
---------------------------------------------------------------------------------
-trailingWhitespace :: Step
-trailingWhitespace = TrailingWhitespace.step
-
---------------------------------------------------------------------------------
-unicodeSyntax ::
-     Bool -- ^ add language pragma?
-  -> String -- ^ language prefix
-  -> Step
-unicodeSyntax = UnicodeSyntax.step
 
 --------------------------------------------------------------------------------
 runStep :: Extensions -> Maybe FilePath -> Lines -> Step -> Either String Lines
