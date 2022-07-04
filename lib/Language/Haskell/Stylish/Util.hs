@@ -25,14 +25,8 @@ import           Data.Data                     (Data)
 import qualified Data.Generics                 as G
 import           Data.Maybe                    (maybeToList)
 import           Data.Typeable                 (cast)
-import           Debug.Trace                   (trace)
 import qualified GHC.Hs                        as Hs
 import qualified GHC.Types.SrcLoc              as GHC
-import qualified GHC.Utils.Outputable          as GHC
-
-import           Language.Haskell.Stylish.GHC  (showOutputable)
-
---------------------------------------------------------------------------------
 import           Language.Haskell.Stylish.Step
 
 --------------------------------------------------------------------------------

@@ -30,7 +30,7 @@ Flag ghc-lib
     Force dependency on ghc-lib-parser even if GHC API in the ghc package is supported
 
 Common depends
-  Ghc-options:      -Wall
+  Ghc-options:      -Wall -Werror
   Default-language: Haskell2010
 
   Build-depends:

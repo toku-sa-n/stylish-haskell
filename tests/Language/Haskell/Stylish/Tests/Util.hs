@@ -8,27 +8,19 @@ module Language.Haskell.Stylish.Tests.Util
   ) where
 
 --------------------------------------------------------------------------------
-import           Control.Exception               (bracket, try)
-import           Data.Data                       (Data (..))
-import           GHC.Exts                        (IsList (..))
-import           GHC.Hs.Dump                     (BlankEpAnnotations (..),
-                                                  BlankSrcSpan (..),
-                                                  showAstData)
-import           System.Directory                (createDirectory,
-                                                  getCurrentDirectory,
-                                                  getTemporaryDirectory,
-                                                  removeDirectoryRecursive,
-                                                  setCurrentDirectory)
-import           System.FilePath                 ((</>))
-import           System.IO.Error                 (isAlreadyExistsError)
-import           System.Random                   (randomIO)
-import           Test.HUnit                      (Assertion, (@=?))
-
---------------------------------------------------------------------------------
-import           Language.Haskell.Stylish.GHC    (showOutputable)
-import           Language.Haskell.Stylish.Module (Module)
+import           Control.Exception              (bracket, try)
+import           GHC.Exts                       (IsList (..))
 import           Language.Haskell.Stylish.Parse
 import           Language.Haskell.Stylish.Step
+import           System.Directory               (createDirectory,
+                                                 getCurrentDirectory,
+                                                 getTemporaryDirectory,
+                                                 removeDirectoryRecursive,
+                                                 setCurrentDirectory)
+import           System.FilePath                ((</>))
+import           System.IO.Error                (isAlreadyExistsError)
+import           System.Random                  (randomIO)
+import           Test.HUnit                     (Assertion, (@=?))
 
 --------------------------------------------------------------------------------
 testStep :: Step -> String -> String

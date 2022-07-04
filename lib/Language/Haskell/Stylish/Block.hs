@@ -10,7 +10,6 @@ module Language.Haskell.Stylish.Block
   ) where
 
 --------------------------------------------------------------------------------
-import qualified Data.IntSet      as IS
 import qualified GHC.Types.SrcLoc as GHC
 
 --------------------------------------------------------------------------------

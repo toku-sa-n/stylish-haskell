@@ -22,13 +22,6 @@ import qualified GHC.Driver.Ppr                                      as GHC (sho
 import           GHC.Driver.Session                                  (defaultDynFlags)
 import qualified GHC.Driver.Session                                  as GHC
 import qualified GHC.Hs                                              as GHC
-import           GHC.Types.SrcLoc                                    (GenLocated (..),
-                                                                      Located,
-                                                                      RealLocated,
-                                                                      RealSrcSpan,
-                                                                      SrcSpan (..),
-                                                                      srcSpanEndLine,
-                                                                      srcSpanStartLine)
 import qualified GHC.Types.SrcLoc                                    as GHC
 import qualified GHC.Utils.Outputable                                as GHC
 import qualified Language.Haskell.GhclibParserEx.GHC.Settings.Config as GHCEx
