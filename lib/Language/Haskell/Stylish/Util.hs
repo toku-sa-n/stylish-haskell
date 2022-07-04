@@ -11,15 +11,9 @@ module Language.Haskell.Stylish.Util
   , wrap
   , wrapRest
   , wrapMaybe
-  , wrapRestMaybe
     -- * Extra list functions
-  , withHead
-  , withInit
-  , withTail
   , withLast
   , flagEnds
-  , traceOutputable
-  , traceOutputableM
   , unguardedRhsBody
   , rhsBody
   , getGuards
@@ -130,42 +124,10 @@ wrapRest maxWidth ind = reverse . wrapRest' [] ""
     overflows ss str = (length ss + length str + 1) >= maxWidth
 
 --------------------------------------------------------------------------------
-wrapRestMaybe :: Maybe Int -> Int -> [String] -> Lines
-wrapRestMaybe (Just maxWidth) = wrapRest maxWidth
-wrapRestMaybe Nothing         = noWrapRest
-
---------------------------------------------------------------------------------
-noWrapRest :: Int -> [String] -> Lines
-noWrapRest ind = reverse . noWrapRest' [] ""
-  where
-    noWrapRest' ls ss []
-      | null ss = ls
-      | otherwise = ss : ls
-    noWrapRest' ls ss (str:strs)
-      | null ss = noWrapRest' ls (indent ind str) strs
-      | otherwise = noWrapRest' ls (ss ++ " " ++ str) strs
-
---------------------------------------------------------------------------------
-withHead :: (a -> a) -> [a] -> [a]
-withHead _ []     = []
-withHead f (x:xs) = f x : xs
-
---------------------------------------------------------------------------------
 withLast :: (a -> a) -> [a] -> [a]
 withLast _ []     = []
 withLast f [x]    = [f x]
 withLast f (x:xs) = x : withLast f xs
-
---------------------------------------------------------------------------------
-withInit :: (a -> a) -> [a] -> [a]
-withInit _ []     = []
-withInit _ [x]    = [x]
-withInit f (x:xs) = f x : withInit f xs
-
---------------------------------------------------------------------------------
-withTail :: (a -> a) -> [a] -> [a]
-withTail _ []     = []
-withTail f (x:xs) = x : map f xs
 
 --------------------------------------------------------------------------------
 -- | Utility for traversing through a list and knowing when you're at the
@@ -180,14 +142,6 @@ flagEnds =
     go (x:y:zs) = (x, False, False) : go (y : zs)
     go [x]      = [(x, False, True)]
     go []       = []
-
---------------------------------------------------------------------------------
-traceOutputable :: GHC.Outputable a => String -> a -> b -> b
-traceOutputable title x = trace (title ++ ": " ++ (showOutputable x))
-
---------------------------------------------------------------------------------
-traceOutputableM :: (GHC.Outputable a, Monad m) => String -> a -> m ()
-traceOutputableM title x = traceOutputable title x $ pure ()
 
 --------------------------------------------------------------------------------
 -- Utility: grab the body out of guarded RHSs if it's a single unguarded one.
