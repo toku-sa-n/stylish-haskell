@@ -37,7 +37,7 @@ findCabalFile verbose = do
       verbose $
         ".cabal file not found, directories searched: " <>
         show potentialProjectRoots
-      verbose $
+      verbose
         "Stylish Haskell will work basing on LANGUAGE pragmas in source files."
       return Nothing
 
