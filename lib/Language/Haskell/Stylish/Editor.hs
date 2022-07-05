@@ -1,5 +1,3 @@
-{-# LANGUAGE LambdaCase #-}
-
 --------------------------------------------------------------------------------
 -- | This module provides you with a line-based editor. It's main feature is
 -- that you can specify multiple changes at the same time, e.g.:
@@ -8,6 +6,8 @@
 --
 -- when this is evaluated, we take into account that 4th line will become the
 -- 3rd line before it needs changing.
+{-# LANGUAGE LambdaCase #-}
+
 module Language.Haskell.Stylish.Editor
   ( module Language.Haskell.Stylish.Block
   , Edits
@@ -108,10 +108,9 @@ replace line startCol endCol repl
 --------------------------------------------------------------------------------
 changeLine :: Int -> (String -> [String]) -> Edits
 changeLine start f =
-  changeLines (Block start start) $ \ls ->
-    case ls of
-      l:_ -> f l
-      _   -> f ""
+  changeLines (Block start start) $ \case
+    l:_ -> f l
+    _   -> f ""
 
 --------------------------------------------------------------------------------
 changeLines :: Block String -> ([String] -> [String]) -> Edits
@@ -151,7 +150,7 @@ conflicts (Edits edits) = M.toAscList edits >>= uncurry checkChanges
       | xstart == ystart = [Conflict i c1 i c2]
       | xend > ystart = [Conflict i c1 i c2]
       | otherwise = checkChanges i (c2 : cs)
-    checkChanges _ (CLine _ _ _:_) = []
+    checkChanges _ (CLine {}:_) = []
 
 --------------------------------------------------------------------------------
 apply :: Edits -> [String] -> [String]
