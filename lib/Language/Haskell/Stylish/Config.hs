@@ -145,7 +145,7 @@ parseConfig (A.Object o)
     -- First load the config without the actual steps
  = do
   config <-
-    Config <$> pure [] <*> (o A..:! "columns" A..!= Just 80) <*>
+    Config [] <$> (o A..:! "columns" A..!= Just 80) <*>
     (o A..:? "language_extensions" A..!= []) <*>
     (o A..:? "newline" >>= parseEnum newlines IO.nativeNewline) <*>
     (o A..:? "cabal" A..!= True) <*>
@@ -225,7 +225,7 @@ parseModuleHeader config o =
 --------------------------------------------------------------------------------
 parseSimpleAlign :: Config -> A.Object -> A.Parser Step
 parseSimpleAlign c o =
-  SimpleAlign.step <$> pure (configColumns c) <*>
+  SimpleAlign.step (configColumns c) <$>
   (SimpleAlign.Config <$> parseAlign "cases" SimpleAlign.cCases <*>
    parseAlign "top_level_patterns" SimpleAlign.cTopLevelPatterns <*>
    parseAlign "records" SimpleAlign.cRecords <*>
@@ -233,7 +233,7 @@ parseSimpleAlign c o =
   where
     parseAlign key f =
       (o A..:? key >>= parseEnum aligns (f SimpleAlign.defaultConfig)) <|>
-      (boolToAlign <$> o A..: key)
+      boolToAlign <$> o A..: key
     aligns =
       [ ("always", SimpleAlign.Always)
       , ("adjacent", SimpleAlign.Adjacent)
@@ -326,7 +326,7 @@ parseImports config o =
 --------------------------------------------------------------------------------
 parseLanguagePragmas :: Config -> A.Object -> A.Parser Step
 parseLanguagePragmas config o =
-  LanguagePragmas.step <$> pure (configColumns config) <*>
+  LanguagePragmas.step (configColumns config) <$>
   (o A..:? "style" >>= parseEnum styles LanguagePragmas.Vertical) <*>
   o A..:? "align" A..!= True <*>
   o A..:? "remove_redundant" A..!= True <*>
