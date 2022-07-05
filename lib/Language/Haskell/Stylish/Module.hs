@@ -1,10 +1,6 @@
-{-# LANGUAGE BlockArguments             #-}
-{-# LANGUAGE DerivingStrategies         #-}
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
-{-# LANGUAGE LambdaCase                 #-}
-{-# LANGUAGE OverloadedStrings          #-}
-{-# LANGUAGE RecordWildCards            #-}
-{-# LANGUAGE TupleSections              #-}
+{-# LANGUAGE BlockArguments     #-}
+{-# LANGUAGE DerivingStrategies #-}
+{-# LANGUAGE OverloadedStrings  #-}
 
 module Language.Haskell.Stylish.Module
     -- * Data types
