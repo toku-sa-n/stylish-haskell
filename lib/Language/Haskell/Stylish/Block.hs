@@ -53,5 +53,5 @@ groupAdjacent = foldr go []
   where
     go (b1, x) gs =
       case break (adjacent b1 . fst) gs of
-        (_, [])             -> (b1, [x]) : gs
-        (ys, ((b2, xs):zs)) -> (merge b1 b2, x : xs) : (ys ++ zs)
+        (_, [])           -> (b1, [x]) : gs
+        (ys, (b2, xs):zs) -> (merge b1 b2, x : xs) : (ys ++ zs)
