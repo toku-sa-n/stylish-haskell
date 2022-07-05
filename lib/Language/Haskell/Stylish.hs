@@ -18,18 +18,16 @@ module Language.Haskell.Stylish
   , Step
   ) where
 
---------------------------------------------------------------------------------
 import           Control.Monad                    (foldM)
-import           System.Directory                 (doesDirectoryExist,
-                                                   doesFileExist, listDirectory)
-import           System.FilePath                  (takeExtension, (</>))
-
---------------------------------------------------------------------------------
+import           Data.Functor                     ((<&>))
 import           Language.Haskell.Stylish.Config
 import           Language.Haskell.Stylish.Parse
 import           Language.Haskell.Stylish.Step
 import           Language.Haskell.Stylish.Verbose
 import           Paths_stylish_haskell            (version)
+import           System.Directory                 (doesDirectoryExist,
+                                                   doesFileExist, listDirectory)
+import           System.FilePath                  (takeExtension, (</>))
 
 --------------------------------------------------------------------------------
 runStep :: Extensions -> Maybe FilePath -> Lines -> Step -> Either String Lines
@@ -61,19 +59,18 @@ format maybeConfigPath maybeFilePath contents = do
 --------------------------------------------------------------------------------
 -- | Searches Haskell source files in any given folder recursively.
 findHaskellFiles :: Bool -> [FilePath] -> IO [FilePath]
-findHaskellFiles v fs = mapM (findFilesR v) fs >>= return . concat
+findHaskellFiles v fs = mapM (findFilesR v) fs <&> concat
 
 --------------------------------------------------------------------------------
 findFilesR :: Bool -> FilePath -> IO [FilePath]
 findFilesR _ [] = return []
-findFilesR v path = do
+findFilesR v path =
   doesFileExist path >>= \case
     True -> return [path]
     _ ->
       doesDirectoryExist path >>= \case
         True ->
-          findFilesRecursive path >>=
-          return . filter (\x -> takeExtension x == ".hs")
+          findFilesRecursive path <&> filter (\x -> takeExtension x == ".hs")
         False -> do
           makeVerbose v ("Input folder does not exists: " <> path)
           findFilesR v []
